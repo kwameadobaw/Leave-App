@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}My Profile - Leave Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Profile Information</h4>
+                </div>
+                <div class="card-body text-center">
+                    {% if user.profile.profile_image %}
+                        <img src="{{ user.profile.profile_image.url }}" alt="Profile Image" class="rounded-circle img-fluid mb-3" style="max-width: 150px;">
+                    {% else %}
+                        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px;">
+                            <span style="font-size: 3rem;">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+                        </div>
+                    {% endif %}
+                    <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                    <p class="text-muted">{{ user.email }}</p>
+                    {% if user.profile.phone_number %}
+                        <p class="text-muted"><i class="fas fa-phone"></i> {{ user.profile.phone_number }}</p>
+                    {% endif %}
+                    <p class="badge bg-info">{{ user.profile.get_user_type_display }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Update Profile</h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ u_form.first_name.id_for_label }}" class="form-label">First Name <span class="text-danger">*</span></label>
+                                {{ u_form.first_name }}
+                                {% if u_form.first_name.errors %}
+                                    <div class="text-danger small">{{ u_form.first_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ u_form.last_name.id_for_label }}" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                {{ u_form.last_name }}
+                                {% if u_form.last_name.errors %}
+                                    <div class="text-danger small">{{ u_form.last_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ u_form.email.id_for_label }}" class="form-label">Email <span class="text-danger">*</span></label>
+                            {{ u_form.email }}
+                            {% if u_form.email.errors %}
+                                <div class="text-danger small">{{ u_form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ p_form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+                            {{ p_form.phone_number }}
+                            <div class="text-muted small mt-1">Your contact phone number</div>
+                            {% if p_form.phone_number.errors %}
+                                <div class="text-danger small">{{ p_form.phone_number.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ p_form.profile_image.id_for_label }}" class="form-label">Profile Image</label>
+                            {{ p_form.profile_image }}
+                            <div class="text-muted small mt-1">Upload a new profile picture (optional)</div>
+                            {% if p_form.profile_image.errors %}
+                                <div class="text-danger small">{{ p_form.profile_image.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                            {% if user.profile.user_type == 'manager' %}
+                                <a href="{% url 'manager_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                            {% elif user.profile.user_type == 'security' %}
+                                <a href="{% url 'security_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                            {% else %}
+                                <a href="{% url 'employee_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

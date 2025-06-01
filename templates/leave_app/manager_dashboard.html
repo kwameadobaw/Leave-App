@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}Manager Dashboard - Leave Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+            <div class="position-sticky pt-3">
+                <div class="text-center mb-4">
+                    <h5 class="text-white">Leave Management</h5>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'manager_dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">
+                            <i class="fas fa-user"></i> My Profile
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Manager Dashboard</h1>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Pending Requests Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-list"></i> Pending Leave Requests
+                </div>
+                <div class="card-body">
+                    {% if pending_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Reason</th>
+                                        <th>Created At</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for leave in pending_requests %}
+                                        <tr>
+                                            <td>{{ leave.employee.get_full_name|default:leave.employee.username }}</td>
+                                            <td>{{ leave.start_date }}</td>
+                                            <td>{{ leave.end_date }}</td>
+                                            <td>{{ leave.reason }}</td>
+                                            <td>{{ leave.created_at|date:"M d, Y" }}</td>
+                                            <td>
+                                                <a href="{% url 'approve_reject_leave' leave.id %}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-check-circle"></i> Review
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            There are no pending leave requests at this time.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Approved Requests Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-check-circle"></i> Approved Leave Requests
+                </div>
+                <div class="card-body">
+                    {% if approved_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Reason</th>
+                                        <th>Approved On</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for leave in approved_requests %}
+                                        <tr class="table-success">
+                                            <td>{{ leave.employee.get_full_name|default:leave.employee.username }}</td>
+                                            <td>{{ leave.start_date }}</td>
+                                            <td>{{ leave.end_date }}</td>
+                                            <td>{{ leave.reason }}</td>
+                                            <td>{{ leave.updated_at|date:"M d, Y" }}</td>
+                                            <td>
+                                                <a href="{% url 'download_leave_pdf' leave.id %}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-print"></i> View & Print
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            There are no approved leave requests at this time.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Rejected Requests Card -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-times-circle"></i> Rejected Leave Requests
+                </div>
+                <div class="card-body">
+                    {% if rejected_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Reason</th>
+                                        <th>Rejected On</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for leave in rejected_requests %}
+                                        <tr class="table-danger">
+                                            <td>{{ leave.employee.get_full_name|default:leave.employee.username }}</td>
+                                            <td>{{ leave.start_date }}</td>
+                                            <td>{{ leave.end_date }}</td>
+                                            <td>{{ leave.reason }}</td>
+                                            <td>{{ leave.updated_at|date:"M d, Y" }}</td>
+                                            <td>
+                                                <a href="{% url 'download_leave_pdf' leave.id %}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-print"></i> View & Print
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    {% else %}
+                        <div class="alert alert-info">
+                            There are no rejected leave requests at this time.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

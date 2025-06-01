@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Request Approval</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .company-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .leave-details {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .leave-details p {
+            margin: 10px 0;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .approval-section {
+            margin-top: 40px;
+        }
+        .signature-line {
+            margin-top: 60px;
+            border-top: 1px solid #000;
+            width: 200px;
+            display: inline-block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>LEAVE REQUEST APPROVAL</h1>
+        <div class="company-name">Company Name</div>
+    </div>
+
+    <div class="content">
+        <p>This document certifies that the leave request submitted by <strong>{{ leave_request.employee.get_full_name }}</strong> has been approved.</p>
+        
+        <div class="leave-details">
+            <h3>Leave Details:</h3>
+            <p><strong>Employee Name:</strong> {{ leave_request.employee.get_full_name }}</p>
+            <p><strong>Email:</strong> {{ leave_request.employee.email }}</p>
+            {% if leave_request.employee.profile.phone_number %}
+            <p><strong>Phone Number:</strong> {{ leave_request.employee.profile.phone_number }}</p>
+            {% endif %}
+            <p><strong>Start Date:</strong> {{ leave_request.start_date }}</p>
+            {% if leave_request.start_time %}
+            <p><strong>Start Time:</strong> {{ leave_request.start_time }}</p>
+            {% endif %}
+            <p><strong>End Date:</strong> {{ leave_request.end_date }}</p>
+            {% if leave_request.end_time %}
+            <p><strong>End Time:</strong> {{ leave_request.end_time }}</p>
+            {% endif %}
+            <p><strong>Reason:</strong> {{ leave_request.reason }}</p>
+            <p><strong>Status:</strong> <span style="color: {% if leave_request.status == 'approved' %}green{% elif leave_request.status == 'rejected' %}red{% else %}orange{% endif %}; font-weight: bold;">{{ leave_request.status|upper }}</span></p>
+            <p><strong>Date {% if leave_request.status == 'approved' %}Approved{% elif leave_request.status == 'rejected' %}Rejected{% else %}Submitted{% endif %}:</strong> {{ leave_request.updated_at|date:"F d, Y" }}</p>
+        </div>
+
+        <div class="approval-section">
+            <p>This leave request has been reviewed and approved in accordance with company policy.</p>
+            
+            <div class="signature-line">
+                <p>Manager's Signature</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>This is an official document. Please keep for your records.</p>
+        <p>Generated on: {{ leave_request.updated_at|date:"F d, Y" }}</p>
+    </div>
+</body>
+</html>

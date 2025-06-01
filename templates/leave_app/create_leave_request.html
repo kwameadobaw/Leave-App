@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Leave Request - Leave Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+            <div class="position-sticky pt-3">
+                <div class="text-center mb-4">
+                    <h5 class="text-white">Leave Management</h5>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'employee_dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'create_leave_request' %}">
+                            <i class="fas fa-plus-circle"></i> New Leave Request
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Create Leave Request</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a href="{% url 'employee_dashboard' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-plus-circle"></i> New Leave Request
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label for="id_start_date" class="form-label">Start Date</label>
+                                {{ form.start_date }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="id_start_time" class="form-label">Start Time</label>
+                                {{ form.start_time }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="id_end_date" class="form-label">End Date</label>
+                                {{ form.end_date }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="id_end_time" class="form-label">End Time</label>
+                                {{ form.end_time }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_reason" class="form-label">Reason for Leave</label>
+                            {{ form.reason }}
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Submit Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

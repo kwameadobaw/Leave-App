@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Log Employee Movement{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Log Employee Movement</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Employee Details:</h5>
+                        <p><strong>Name:</strong> {{ leave_request.employee.get_full_name }}</p>
+                        <p><strong>Leave Period:</strong> {{ leave_request.start_date }} to {{ leave_request.end_date }}</p>
+                        {% if leave_request.start_time %}
+                        <p><strong>Start Time:</strong> {{ leave_request.start_time }}</p>
+                        {% endif %}
+                        {% if leave_request.end_time %}
+                        <p><strong>End Time:</strong> {{ leave_request.end_time }}</p>
+                        {% endif %}
+                        <p><strong>Reason:</strong> {{ leave_request.reason }}</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="id_departure_time">Departure Time:</label>
+                            {{ form.departure_time }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_return_time">Return Time:</label>
+                            {{ form.return_time }}
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Log Movement</button>
+                            <a href="{% url 'security_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
