@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-7dj89qcshxi_jf@d3fr9y83s!%@#2fg8khgmv5oot1i=uzty2!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['.vercel.app', "*"]
 
 
 # Application definition
@@ -83,18 +83,18 @@ db_info = urlparse(db_url)
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': BASE_DIR / 'db.sqlite3',
+     }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': db_info.path[1:],  # Remove the leading slash
+    #     'USER': db_info.username,
+    #     'PASSWORD': db_info.password,
+    #     'HOST': db_info.hostname,
+    #     'PORT': db_info.port or '5432',
     # }
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': db_info.path[1:],  # Remove the leading slash
-        'USER': db_info.username,
-        'PASSWORD': db_info.password,
-        'HOST': db_info.hostname,
-        'PORT': db_info.port or '5432',
-    }
 }
 
 
